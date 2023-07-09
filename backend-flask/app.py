@@ -40,7 +40,6 @@ cw_handler = watchtower.CloudWatchLogHandler(log_group='cruddur')
 LOGGER.addHandler(console_handler)
 LOGGER.addHandler(cw_handler)
 #LOGGER.info("some message")
-LOGGER.info("Test log")
 
 # HoneyComb
 # Initialize tracing and an exporter that can send data to Honeycomb
@@ -122,7 +121,9 @@ def data_create_message():
 
 @app.route("/api/activities/home", methods=['GET'])
 def data_home():
+  #data = HomeActivities.run(Logger=LOGGER)
   data = HomeActivities.run()
+  LOGGER.info('Hello Cloudwatch! from  /api/activities/home')
   return data, 200
 
 @app.route("/api/activities/notifications", methods=['GET'])
