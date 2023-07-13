@@ -11,24 +11,22 @@ export default function SigninPage() {
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
   const [errors, setErrors] = React.useState('');
-  const [cognitoErrors, setCognitoErrors] = React.useState('');
 
   const onsubmit = async (event) => {
-    setCognitoErrors('')
+    setErrors('')
     event.preventDefault();
-    try {
-      Auth.signIn(email, password)
-        .then(user => {
-          localStorage.setItem("access_token", user.signInUserSession.accessToken.jwtToken)
-          window.location.href = "/"
-        })
-        .catch(err => { console.log('Error!', err) });
-    } catch (error) {
+    Auth.signIn(email, password)
+    .then(user => {
+      console.log('user',user)
+      localStorage.setItem("access_token", user.signInUserSession.accessToken.jwtToken)
+      window.location.href = "/"
+    })
+    .catch(error => { 
       if (error.code == 'UserNotConfirmedException') {
         window.location.href = "/confirm"
       }
-      setCognitoErrors(error.message)
-    }
+      setErrors(error.message)
+    });
     return false
   }
 
