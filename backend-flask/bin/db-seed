@@ -2,13 +2,13 @@
 
 CYAN='\033[1;36m'
 NO_COLOR='\033[0m'
-LABEL='db-schema-load'
+LABEL='db-seed'
 printf "${CYAN}== ${LABEL}${NO_COLOR}\n"
 
 
-echo "executing dp-schema-load proccess"
-schema_path="$(realpath .)/db/schema.sql"
-echo $schema_path
+echo "executing dp-seed-load proccess"
+seed_path="$(realpath .)/db/seed.sql"
+echo $seed_path
 
 if [ "$1" = "prod" ]; then
     echo "using production env"
@@ -18,4 +18,4 @@ else
     CON_URL=$CONNECTION_URL
 fi
 
-psql $CON_URL cruddur < $schema_path
+psql $CON_URL cruddur < $seed_path
