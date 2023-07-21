@@ -57,8 +57,8 @@ processor = BatchSpanProcessor(OTLPSpanExporter())
 provider.add_span_processor(processor)
 
 # X-Ray Initialize
-xray_url = os.getenv("AWS_XRAY_URL")
-xray_recorder.configure(service='backend-flask', dynamic_naming=xray_url)
+#xray_url = os.getenv("AWS_XRAY_URL")
+#xray_recorder.configure(service='backend-flask', dynamic_naming=xray_url)
 
 # Show this in the logs within the backen flask app STDOUT
 simple_processor = SimpleSpanProcessor(ConsoleSpanExporter())
@@ -76,7 +76,7 @@ cognito_jwt_token = CognitoJwtToken(
 )
 
 # X-Ray Initialize
-XRayMiddleware(app, xray_recorder)
+#XRayMiddleware(app, xray_recorder)
 
 # HoneyComb
 # Initialize automatic instrumentation with Flask
@@ -86,13 +86,14 @@ frontend = os.getenv('FRONTEND_URL')
 backend = os.getenv('BACKEND_URL')
 origins = [frontend, backend]
 
-cors = CORS(
-  app, 
-  resources={r"/api/*": {"origins": origins}},
-  headers=['Content-Type', 'Authorization'], 
-  expose_headers='Authorization',
-  methods="OPTIONS,GET,HEAD,POST"
-)
+#
+#cors = CORS(
+#  app, 
+#  resources={r"/api/*": {"origins": origins}},
+#  headers=['Content-Type', 'Authorization'], 
+#  expose_headers='Authorization',
+#  methods="OPTIONS,GET,HEAD,POST"
+#)*/
 
 # Cloudwatch logs
 @app.after_request
@@ -161,9 +162,10 @@ def data_create_message():
   return
 
 @app.route("/api/activities/home", methods=['GET'])
-@xray_recorder.capture('activities_home')
+#@xray_recorder.capture('activities_home')
 def data_home():
   #data = HomeActivities.run(Logger=LOGGER)
+  print("HOME ACTIVITIES LALALALALALA")
 
   access_token = extract_access_token(request.headers)
   try:
@@ -188,7 +190,7 @@ def data_notifications():
   return data, 200
 
 @app.route("/api/activities/@<string:handle>", methods=['GET'])
-@xray_recorder.capture('activities_users')
+#@xray_recorder.capture('activities_users')
 def data_handle(handle):
   model = UserActivities.run(handle)
   if model['errors'] is not None:
