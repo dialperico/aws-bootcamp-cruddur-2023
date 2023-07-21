@@ -9,7 +9,7 @@ def lambda_handler(event, context):
 
     user_display_name = user['name']
     user_email = user['email']
-    user_handle = user['prefered_username']
+    user_handle = user['preferred_username']
     user_cognito_id = user['sub']
 
     try:
