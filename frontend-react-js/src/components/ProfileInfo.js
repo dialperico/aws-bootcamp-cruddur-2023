@@ -13,12 +13,12 @@ export default function ProfileInfo(props) {
   }
 
   const signOut = async () => {
-    try{
-      await Auth.signOut({ global:true });
-      window.location.href= "/"
-      localStorage.removeItem("access_token")
+    try {
+        await Auth.signOut({ global: true });
+        window.location.href = "/"
+        localStorage.removeItem("access_token")
     } catch (error) {
-      console.log('error signing out: ', error)
+        console.log('error signing out: ', error);
     }
   }
 

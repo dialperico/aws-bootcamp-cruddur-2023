@@ -3,9 +3,9 @@ services:
   backend-flask:
     environment:
       CONNECTION_URL: "postgresql://postgres:password@db:5432/cruddur"
-      RONTEND_URL: "https://3000-${GITPOD_WORKSPACE_ID}.${GITPOD_WORKSPACE_CLUSTER_HOST}"
+      FRONTEND_URL: "https://3000-${GITPOD_WORKSPACE_ID}.${GITPOD_WORKSPACE_CLUSTER_HOST}"
       BACKEND_URL: "https://4567-${GITPOD_WORKSPACE_ID}.${GITPOD_WORKSPACE_CLUSTER_HOST}"
-      OTEL_SERVICE-NAME: 'backend-flask'
+      OTEL_SERVICE_NAME: 'backend-flask'
       OTEL_EXPORTER_OTLP_ENDPOINT: "https://api.honeycomb.io"
       OTEL_EXPORTER_OTLP_HEADERS: "x-honeycomb-team=${HONEYCOMB_API_KEY}"
       AWS_XRAY_URL: "*4567-${GITPOD_WORKSPACE_ID}.${GITPOD_WORKSPACE_CLUSTER_HOST}*"

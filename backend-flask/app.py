@@ -60,9 +60,10 @@ provider.add_span_processor(processor)
 #xray_url = os.getenv("AWS_XRAY_URL")
 #xray_recorder.configure(service='backend-flask', dynamic_naming=xray_url)
 
-# Show this in the logs within the backen flask app STDOUT
-simple_processor = SimpleSpanProcessor(ConsoleSpanExporter())
-provider.add_span_processor(simple_processor)
+#OTEL
+# Show this in the logs within the backend-flask app (STDOUT)
+#simple_processor = SimpleSpanProcessor(ConsoleSpanExporter())
+#provider.add_span_processor(simple_processor)
 
 trace.set_tracer_provider(provider)
 tracer = trace.get_tracer(__name__)
@@ -82,9 +83,18 @@ cognito_jwt_token = CognitoJwtToken(
 # Initialize automatic instrumentation with Flask
 FlaskInstrumentor().instrument_app(app)
 RequestsInstrumentor().instrument()
+
+
 frontend = os.getenv('FRONTEND_URL')
 backend = os.getenv('BACKEND_URL')
 origins = [frontend, backend]
+cors = CORS(
+  app, 
+  resources={r"/api/*": {"origins": origins}},
+  headers=['Content-Type', 'Authorization'], 
+  expose_headers='Authorization',
+  methods="OPTIONS,GET,HEAD,POST"
+)
 
 #
 #cors = CORS(
@@ -164,9 +174,6 @@ def data_create_message():
 @app.route("/api/activities/home", methods=['GET'])
 #@xray_recorder.capture('activities_home')
 def data_home():
-  #data = HomeActivities.run(Logger=LOGGER)
-  print("HOME ACTIVITIES LALALALALALA")
-
   access_token = extract_access_token(request.headers)
   try:
     claims = cognito_jwt_token.verify(access_token)
