@@ -26,8 +26,8 @@ class Db:
   def init_pool(self):
     connection_url = os.getenv("CONNECTION_URL")
     self.pool = ConnectionPool(connection_url)
-  # we want to commit data such as an insert
-  # be sure to check for RETURNING in all uppercases
+  # We want to commit data such as an insert
+  # Be sure to check for RETURNING in all uppercases
   def print_params(self,params):
     blue = '\033[94m'
     no_color = '\033[0m'
@@ -57,7 +57,7 @@ class Db:
           return returning_id
     except Exception as err:
       self.print_sql_err(err)
-  # when we want to return a json object
+  # When we want to return a json object
   def query_array_json(self,sql,params={}):
     self.print_sql('array',sql)
 
@@ -97,17 +97,17 @@ class Db:
     """
     return sql
   def print_sql_err(self,err):
-    # get details about the exception
+    # Get details about the exception
     err_type, err_obj, traceback = sys.exc_info()
 
-    # get the line number when exception occured
+    # Get the line number when exception occured
     line_num = traceback.tb_lineno
 
-    # print the connect() error
+    # Print the connect() error
     print ("\npsycopg ERROR:", err, "on line number:", line_num)
     print ("psycopg traceback:", traceback, "-- type:", err_type)
 
-    # print the pgcode and pgerror exceptions
+    # Print the pgcode and pgerror exceptions
     print ("pgerror:", err.pgerror)
     print ("pgcode:", err.pgcode, "\n")
 
