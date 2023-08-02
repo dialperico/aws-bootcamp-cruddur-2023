@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# -*- coding: cp1252 -*-
 
 import boto3
 import sys
@@ -18,7 +19,7 @@ attrs = {
 if len(sys.argv) == 2:
   if "prod" in sys.argv[1]:
     attrs = {}
-dynamodb = boto3.client('dynamodb',**attrs)
+ddb = boto3.client('dynamodb',**attrs)
 
 def get_user_uuids():
   sql = """
@@ -67,7 +68,7 @@ def create_message_group(client,message_group_uuid, my_user_uuid, last_message_a
   print(response)
 
 def create_message(client,message_group_uuid, created_at, message, my_user_uuid, my_user_display_name, my_user_handle):
-  # Entity # Message Group Id
+  table_name = 'cruddur-messages'
   record = {
     'pk':   {'S': f"MSG#{message_group_uuid}"},
     'sk':   {'S': created_at },
@@ -78,7 +79,6 @@ def create_message(client,message_group_uuid, created_at, message, my_user_uuid,
     'user_handle': {'S': my_user_handle}
   }
   # insert the record into the table
-  table_name = 'cruddur-messages'
   response = client.put_item(
     TableName=table_name,
     Item=record
@@ -87,13 +87,12 @@ def create_message(client,message_group_uuid, created_at, message, my_user_uuid,
   print(response)
 
 
-message_group_uuid = "5ae290ed-55d1-47a0-bc6d-fe2bc2700399" #str(uuid.uuid4())
+message_group_uuid = "5ae290ed-55d1-47a0-bc6d-fe2bc2700399"
+now = datetime.now(timezone.utc).astimezone()
 users = get_user_uuids()
 
-now = datetime.now(timezone.utc).astimezone()
-
 create_message_group(
-  client=dynamodb,
+  client=ddb,
   message_group_uuid=message_group_uuid,
   my_user_uuid=users['my_user']['uuid'],
   other_user_uuid=users['other_user']['uuid'],
@@ -104,7 +103,7 @@ create_message_group(
 )
 
 create_message_group(
-  client=dynamodb,
+  client=ddb,
   message_group_uuid=message_group_uuid,
   my_user_uuid=users['other_user']['uuid'],
   other_user_uuid=users['my_user']['uuid'],
@@ -235,8 +234,8 @@ for i in range(len(lines)):
 
   created_at = (now + timedelta(minutes=i)).isoformat()
   create_message(
-    client=dynamodb,
-    message_group_uuid= message_group_uuid,
+    client=ddb,
+    message_group_uuid=message_group_uuid,
     created_at=created_at,
     message=message,
     my_user_uuid=users[key]['uuid'],
